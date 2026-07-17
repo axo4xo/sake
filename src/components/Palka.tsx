@@ -1,13 +1,15 @@
 import { useRef, useEffect } from "react"
 import { useFrame } from "@react-three/fiber"
 import type { Mesh } from "three"
+import { gameState } from "../gameState"
 
 type PalkaProps = {
     position: [number, number, number]
     keys: { up: string; down: string }
+    side: "left" | "right"
 }
 
-const Palka = ({ position, keys }: PalkaProps) => {
+const Palka = ({ position, keys, side }: PalkaProps) => {
     const meshRef = useRef<Mesh>(null)
     const pressed = useRef<Set<string>>(new Set())
     const speed = 5
@@ -23,6 +25,17 @@ const Palka = ({ position, keys }: PalkaProps) => {
         }
     }, [])
 
+    useEffect(() => {
+        if (meshRef.current) {
+            if (side === "left") gameState.leftPaddle = meshRef.current
+            else gameState.rightPaddle = meshRef.current
+        }
+        return () => {
+            if (side === "left") gameState.leftPaddle = null
+            else gameState.rightPaddle = null
+        }
+    }, [side])
+
     useFrame((_, delta) => {
         if (!meshRef.current) return
         if (pressed.current.has(keys.up) && meshRef.current.position.y < 3) meshRef.current.position.y += speed * delta
@@ -31,7 +44,7 @@ const Palka = ({ position, keys }: PalkaProps) => {
 
     return (
         <mesh ref={meshRef} position={position}>
-            <boxGeometry args={[0.4, 2, 1]} />
+            <boxGeometry args={[0.4, 2, 0.5]} />
             <pSXMaterial
                 uResolution={160.0}
                 uColor="red"
