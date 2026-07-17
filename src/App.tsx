@@ -10,8 +10,8 @@ const App = () => {
         dpr={[0.1, 0.3]}
         style={{ imageRendering: 'pixelated' }}>
 
-        <Palka position={[-5, 0, 0]} />
-        <Palka position={[5, 0, 0]} />
+        <Palka position={[-5, 0, 0]} keys={{ up: "w", down: "s" }} />
+        <Palka position={[5, 0, 0]} keys={{ up: "ArrowUp", down: "ArrowDown" }} />
         <Mic />
 
         <ambientLight intensity={0} />
