@@ -7,9 +7,11 @@ import { gameState } from "../gameState"
 const StartText = () => {
     const meshRef = useRef<Mesh>(null)
 
-    useFrame(() => {
+    useFrame((state) => {
         if (!meshRef.current) return
         meshRef.current.visible = !gameState.playing
+        const pulse = 0.85 + Math.sin(state.clock.elapsedTime * 4) * 0.15
+        meshRef.current.scale.setScalar(pulse)
     })
 
     return (

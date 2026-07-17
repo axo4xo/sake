@@ -52,10 +52,12 @@ const Mic = () => {
         if (pos.y + BALL_RADIUS > arenaTop) {
             pos.y = arenaTop - BALL_RADIUS
             vel.y = -Math.abs(vel.y)
+            gameState.particleEmissions.push({ x: pos.x, y: arenaTop, dirX: 0, dirY: -1, color: [1, 1, 1] })
         }
         if (pos.y - BALL_RADIUS < arenaBottom) {
             pos.y = arenaBottom + BALL_RADIUS
             vel.y = Math.abs(vel.y)
+            gameState.particleEmissions.push({ x: pos.x, y: arenaBottom, dirX: 0, dirY: 1, color: [1, 1, 1] })
         }
 
         // Paddle collision
@@ -75,6 +77,7 @@ const Mic = () => {
                 vel.x = Math.abs(vel.x)
                 const offset = (pos.y - py) / paddleHalfHeight // -1 to 1
                 vel.y = offset * BALL_SPEED * 0.75
+                gameState.particleEmissions.push({ x: pos.x, y: pos.y, dirX: 1, dirY: offset, color: [1, 0.5, 0.1] })
             }
         }
 
@@ -91,8 +94,14 @@ const Mic = () => {
                 vel.x = -Math.abs(vel.x)
                 const offset = (pos.y - py) / paddleHalfHeight
                 vel.y = offset * BALL_SPEED * 0.75
+                gameState.particleEmissions.push({ x: pos.x, y: pos.y, dirX: -1, dirY: offset, color: [1, 0.5, 0.1] })
             }
         }
+
+        // Rolling rotation: ω = v / r, around perpendicular axes
+        const rot = meshRef.current.rotation
+        rot.y -= vel.x * delta / BALL_RADIUS
+        rot.x -= vel.y * delta / BALL_RADIUS
 
         const { arenaLeft, arenaRight } = gameState
         if (pos.x < arenaLeft || pos.x > arenaRight) {
@@ -100,6 +109,7 @@ const Mic = () => {
             pos.set(0, 0, 0)
             vel.x = 0
             vel.y = 0
+            rot.set(0, 0, 0)
         }
     })
 

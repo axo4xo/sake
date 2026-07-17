@@ -4,6 +4,7 @@ import Palka from "./components/Palka";
 import Mic from "./components/Mic";
 import StartText from "./components/StartText";
 import Arena from "./components/Arena";
+import Particles from "./components/Particles";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Mic />
         <StartText />
         <Arena />
+        <Particles />
 
         <ambientLight intensity={0.6} />
         <directionalLight color="white" position={[0, 0, 1]} intensity={1} />
