@@ -1,7 +1,8 @@
 import { useRef } from "react"
 import { useFrame } from "@react-three/fiber"
-import { useKeyboardControls, useTexture } from "@react-three/drei"
+import { useKeyboardControls, useTexture, PositionalAudio } from "@react-three/drei"
 import { NearestFilter } from "three"
+import * as THREE from "three"
 import type { Mesh } from "three"
 import { gameState } from "../gameState"
 import { Controls } from "../controls"
@@ -11,6 +12,7 @@ const BALL_RADIUS = 0.25
 
 const Mic = () => {
     const meshRef = useRef<Mesh>(null)
+    const audioRef = useRef<THREE.PositionalAudio>(null)
     const velocity = useRef({ x: 0, y: 0 })
     const prevStart = useRef(false)
     const [, get] = useKeyboardControls<Controls>()
@@ -19,10 +21,26 @@ const Mic = () => {
     texture.magFilter = NearestFilter
     texture.minFilter = NearestFilter
 
+    const playPing = () => {
+        const audio = audioRef.current
+
+        if (!audio || !audio.buffer) return
+        audio.setVolume(0.4)
+
+        const context = audio.context
+        const source = context.createBufferSource()
+        source.buffer = audio.buffer
+        source.playbackRate.value = 0.85 + Math.random() * 0.3
+
+        const targetNode = audio.panner || audio.getOutput()
+        source.connect(targetNode)
+
+        source.start(0)
+    }
+
     useFrame((_, delta) => {
         if (!meshRef.current) return
 
-        // Space to start — detect rising edge (just pressed)
         const { start } = get()
         if (start && !prevStart.current && !gameState.playing) {
             gameState.playing = true
@@ -40,27 +58,27 @@ const Mic = () => {
         const pos = meshRef.current.position
         const vel = velocity.current
 
-        // Move
         pos.x += vel.x * delta
         pos.y += vel.y * delta
 
-        // Top/bottom wall bounce
-        const { arenaTop, arenaBottom } = gameState
+        const { arenaTop, arenaBottom, leftPaddle, rightPaddle, paddleHalfHeight, paddleHalfWidth } = gameState
+
+        // Odraz nahoře
         if (pos.y + BALL_RADIUS > arenaTop) {
             pos.y = arenaTop - BALL_RADIUS
             vel.y = -Math.abs(vel.y)
+            playPing()
             gameState.particleEmissions.push({ x: pos.x, y: arenaTop, dirX: 0, dirY: -1, color: [1, 1, 1] })
         }
+        // Odraz dole
         if (pos.y - BALL_RADIUS < arenaBottom) {
             pos.y = arenaBottom + BALL_RADIUS
             vel.y = Math.abs(vel.y)
+            playPing()
             gameState.particleEmissions.push({ x: pos.x, y: arenaBottom, dirX: 0, dirY: 1, color: [1, 1, 1] })
         }
 
-        // Paddle collision
-        const { leftPaddle, rightPaddle, paddleHalfHeight, paddleHalfWidth } = gameState
-
-        // Left paddle
+        // Levá pálka
         if (leftPaddle && vel.x < 0) {
             const px = leftPaddle.position.x
             const py = leftPaddle.position.y
@@ -74,10 +92,12 @@ const Mic = () => {
                 vel.x = Math.abs(vel.x)
                 const offset = (pos.y - py) / paddleHalfHeight
                 vel.y = offset * BALL_SPEED * 0.75
+                playPing()
                 gameState.particleEmissions.push({ x: pos.x, y: pos.y, dirX: 1, dirY: offset, color: [1, 0.5, 0.1] })
             }
         }
 
+        // Pravá pálka
         if (rightPaddle && vel.x > 0) {
             const px = rightPaddle.position.x
             const py = rightPaddle.position.y
@@ -91,11 +111,11 @@ const Mic = () => {
                 vel.x = -Math.abs(vel.x)
                 const offset = (pos.y - py) / paddleHalfHeight
                 vel.y = offset * BALL_SPEED * 0.75
+                playPing()
                 gameState.particleEmissions.push({ x: pos.x, y: pos.y, dirX: -1, dirY: offset, color: [1, 0.5, 0.1] })
             }
         }
 
-        // Rolling rotation: ω = v / r, around perpendicular axes
         const rot = meshRef.current.rotation
         rot.y -= vel.x * delta / BALL_RADIUS
         rot.x -= vel.y * delta / BALL_RADIUS
@@ -117,6 +137,13 @@ const Mic = () => {
                 uResolution={320.0}
                 uColor="white"
                 uTexture={texture}
+            />
+            <PositionalAudio
+                ref={audioRef}
+                url="/ping.mp3"
+                loop={false}
+                distance={5}
+
             />
         </mesh>
     )
