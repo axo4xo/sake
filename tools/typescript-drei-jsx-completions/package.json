@@ -1,7 +1,0 @@
-{
-  "name": "typescript-drei-jsx-completions",
-  "version": "0.0.0",
-  "private": true,
-  "main": "index.cjs",
-  "type": "commonjs"
-}
