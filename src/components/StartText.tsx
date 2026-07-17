@@ -1,6 +1,7 @@
 import { useRef } from "react"
 import { useFrame } from "@react-three/fiber"
-import { Text } from "@react-three/drei"
+import { Text, RenderTexture } from "@react-three/drei"
+import * as THREE from "three"
 import type { Mesh } from "three"
 import { gameState } from "../gameState"
 
@@ -15,20 +16,28 @@ const StartText = () => {
     })
 
     return (
-        <Text
-            ref={meshRef}
-            position={[0, -2.5, 0.5]}
-            fontSize={0.4}
-            color="white"
-            outlineColor="black"
-            outlineWidth={0.05}
-            fontWeight="bold"
-            anchorX="center"
-            anchorY="middle"
-
-        >
-            PRESS SPACE TO START
-        </Text>
+        <mesh ref={meshRef} position={[0, -2.5, 0.5]}>
+            <planeGeometry args={[8, 4]} />
+            <meshBasicMaterial transparent>
+                <RenderTexture
+                    attach="map"
+                    width={1024}
+                    height={2048}
+                    magFilter={THREE.NearestFilter}
+                    minFilter={THREE.NearestFilter}
+                >
+                    <Text
+                        fontSize={1}
+                        color="white"
+                        outlineColor="black"
+                        outlineWidth={0.05}
+                        fontWeight="bold"
+                    >
+                        PRESS SPACE TO START
+                    </Text>
+                </RenderTexture>
+            </meshBasicMaterial>
+        </mesh>
     )
 }
 

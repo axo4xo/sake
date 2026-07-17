@@ -16,7 +16,7 @@ const App = () => {
       <div id="canvas-container">
         <FpsCounter />
         <Canvas
-          gl={{ antialias: false, desynchronized: true, powerPreference: "high-performance" }}
+          gl={{ antialias: false }}
           dpr={[0.1, 0.3]}
           style={{ imageRendering: 'pixelated' }}>
 

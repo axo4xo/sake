@@ -5,7 +5,7 @@ import { NearestFilter } from "three"
 import * as THREE from "three"
 import type { Mesh } from "three"
 import { gameState } from "../gameState"
-import { Controls } from "../controls"
+import type { Controls } from "../controls"
 
 const BALL_SPEED = 6
 const BALL_RADIUS = 0.25

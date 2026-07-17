@@ -1,19 +1,12 @@
 import { KeyboardControls } from "@react-three/drei"
 
-export enum Controls {
-    leftUp = "leftUp",
-    leftDown = "leftDown",
-    rightUp = "rightUp",
-    rightDown = "rightDown",
-    start = "start",
-}
-
+export type Controls = "leftUp" | "leftDown" | "rightUp" | "rightDown" | "start"
 export const keyMap = [
-    { name: Controls.leftUp, keys: ["KeyW"] },
-    { name: Controls.leftDown, keys: ["KeyS"] },
-    { name: Controls.rightUp, keys: ["ArrowUp"] },
-    { name: Controls.rightDown, keys: ["ArrowDown"] },
-    { name: Controls.start, keys: ["Space"] },
+    { name: "leftUp", keys: ["KeyW"] },
+    { name: "leftDown", keys: ["KeyS"] },
+    { name: "rightUp", keys: ["ArrowUp"] },
+    { name: "rightDown", keys: ["ArrowDown"] },
+    { name: "start", keys: ["Space"] },
 ]
 
 export { KeyboardControls }
