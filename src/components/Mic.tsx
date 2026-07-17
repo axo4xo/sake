@@ -142,7 +142,7 @@ const Mic = () => {
                 ref={audioRef}
                 url="/ping.mp3"
                 loop={false}
-                distance={5}
+                distance={10}
 
             />
         </mesh>
