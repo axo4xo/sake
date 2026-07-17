@@ -6,7 +6,10 @@ const Palka = ({ position }: PalkaProps) => {
     return (
         <mesh position={position}>
             <boxGeometry args={[0.4, 2, 1]} />
-            <meshPhongMaterial />
+            <pSXMaterial
+                uResolution={160.0}
+                uColor="red"
+            />
         </mesh>
     )
 }

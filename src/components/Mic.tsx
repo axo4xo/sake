@@ -2,7 +2,10 @@ const Mic = () => {
     return (
         <mesh>
             <sphereGeometry args={[0.25]} />
-            <meshNormalMaterial />
+            <pSXMaterial
+                uResolution={320.0}
+                uColor="blue"
+            />
         </mesh>
     )
 }
