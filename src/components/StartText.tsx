@@ -17,7 +17,10 @@ const StartText = () => {
             ref={meshRef}
             position={[0, -2.5, 0.5]}
             fontSize={0.4}
-            color="black"
+            color="white"
+            outlineColor="black"
+            outlineWidth={0.05}
+            fontWeight="bold"
             anchorX="center"
             anchorY="middle"
 

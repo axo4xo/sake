@@ -1,5 +1,7 @@
 import { useRef, useEffect } from "react"
 import { useFrame } from "@react-three/fiber"
+import { useTexture } from "@react-three/drei"
+import { NearestFilter } from "three"
 import type { Mesh } from "three"
 import { gameState } from "../gameState"
 
@@ -9,6 +11,10 @@ const BALL_RADIUS = 0.25
 const Mic = () => {
     const meshRef = useRef<Mesh>(null)
     const velocity = useRef({ x: 0, y: 0 })
+
+    const texture = useTexture("/textures/ball.jpg")
+    texture.magFilter = NearestFilter
+    texture.minFilter = NearestFilter
 
     // Listen for Space to start/reset
     useEffect(() => {
@@ -102,7 +108,8 @@ const Mic = () => {
             <sphereGeometry args={[BALL_RADIUS]} />
             <pSXMaterial
                 uResolution={320.0}
-                uColor="blue"
+                uColor="white"
+                uTexture={texture}
             />
         </mesh>
     )

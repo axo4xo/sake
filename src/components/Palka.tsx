@@ -1,5 +1,7 @@
 import { useRef, useEffect } from "react"
 import { useFrame } from "@react-three/fiber"
+import { useTexture } from "@react-three/drei"
+import { NearestFilter } from "three"
 import type { Mesh } from "three"
 import { gameState } from "../gameState"
 
@@ -13,6 +15,10 @@ const Palka = ({ position, keys, side }: PalkaProps) => {
     const meshRef = useRef<Mesh>(null)
     const pressed = useRef<Set<string>>(new Set())
     const speed = 5
+
+    const texture = useTexture("/textures/paddle.jpg")
+    texture.magFilter = NearestFilter
+    texture.minFilter = NearestFilter
 
     useEffect(() => {
         const onDown = (e: KeyboardEvent) => pressed.current.add(e.key)
@@ -47,7 +53,8 @@ const Palka = ({ position, keys, side }: PalkaProps) => {
             <boxGeometry args={[0.4, 2, 0.5]} />
             <pSXMaterial
                 uResolution={160.0}
-                uColor="red"
+                uColor="white"
+                uTexture={texture}
             />
         </mesh>
     )

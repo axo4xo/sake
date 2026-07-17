@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber"
 import Palka from "./components/Palka";
 import Mic from "./components/Mic";
 import StartText from "./components/StartText";
+import Arena from "./components/Arena";
 
 const App = () => {
   return (
@@ -15,9 +16,10 @@ const App = () => {
         <Palka position={[5, 0, 0]} keys={{ up: "ArrowUp", down: "ArrowDown" }} side="right" />
         <Mic />
         <StartText />
+        <Arena />
 
-        <ambientLight intensity={0} />
-        <directionalLight color="red" position={[0, 0, 1]} />
+        <ambientLight intensity={0.6} />
+        <directionalLight color="white" position={[0, 0, 1]} intensity={1} />
 
       </Canvas>
     </div>
